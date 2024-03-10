@@ -1,0 +1,28 @@
+﻿# Use the base image with Python
+FROM python:3.9-slim
+# Set the working directory in the container
+WORKDIR /app
+# Install poppler, tesseract-ocr, the Polish language package, and dependencies for OpenCV
+RUN apt-get update && \
+    apt-get install -y \
+        poppler-utils \
+        tesseract-ocr \
+        tesseract-ocr-pol \
+        libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
+# Ensure that poppler and Tesseract binaries are in PATH
+ENV PATH="/usr/bin:${PATH}"
+# Copy project files into the container using wildcard
+COPY *.py ./
+# Copy python requirements file
+COPY requirements.txt .
+# Install required Python packages including OpenCV and spaCy from requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+# Install the Polish language model for spaCy
+RUN python -m spacy download pl_core_news_sm
+# Copy your tessdata folder into the container
+COPY tessdata /usr/share/tesseract-ocr/5/tessdata/
+# Expose the port the app runs on
+EXPOSE 8000
+# Start the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

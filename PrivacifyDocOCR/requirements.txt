@@ -1,0 +1,11 @@
+﻿fastapi[all]
+uvicorn
+pytesseract
+pillow
+pdf2image
+opencv-python-headless
+pymongo
+PyPDF2
+pika
+requests
+spacy

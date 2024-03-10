@@ -1,0 +1,25 @@
+﻿version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: 'SWQOKODSQALRPCLNMEQG'
+      RABBITMQ_DEFAULT_USER: 'guest'
+      RABBITMQ_DEFAULT_PASS: 'guest'
+      RABBITMQ_DEFAULT_VHOST: '/'
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  rabbitmq_data: {}
+  mongodb_data: {}
