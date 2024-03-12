@@ -14,13 +14,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="CQRS\Query\" />
+        <Folder Include="CQRS\Query\"/>
     </ItemGroup>
 
 </Project>

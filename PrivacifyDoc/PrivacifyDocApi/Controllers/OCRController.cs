@@ -3,9 +3,9 @@ using PrivacifyDoc.CQRS.Dispatcher;
 
 namespace PrivacifyDoc.Controllers;
 
-public class OCRController  : Controller
+public class OCRController : Controller
 {
-    private Dispatcher _dispatcher;
+    private readonly Dispatcher _dispatcher;
 
     public OCRController(Dispatcher dispatcher)
     {
@@ -13,9 +13,9 @@ public class OCRController  : Controller
     }
 
     [HttpPost]
-    public IActionResult CreateOrder(/*..*/)
+    public IActionResult CreateOrder( /*..*/)
     {
-        var command = new CreateOrderCommand(/*..*/);
+        var command = new CreateOrderCommand( /*..*/);
         _dispatcher.Send(command);
         // ...
     }
@@ -23,7 +23,7 @@ public class OCRController  : Controller
     [HttpGet]
     public IActionResult GetOrder(int id)
     {
-        var query = new GetOrderByIdQuery{id = id};
+        var query = new GetOrderByIdQuery { id = id };
         var result = _dispatcher.Query<Order>(query);
         // ...
     }
