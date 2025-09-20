@@ -1,28 +1,32 @@
-﻿using System.Windows.Input;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace PrivacifyDoc.CQRS.Dispatcher;
-
-public class Dispatcher
+namespace PrivacifyDoc.Api.CQRS.Dispatcher
 {
-    public void Send<T>(T command) where T : ICommand
+    public class Dispatcher
     {
-        // Locate the correct handler and invoke it
-    }
+        private readonly IServiceProvider _serviceProvider;
 
-    public TResult Query<TResult>(IQuery<TResult> query)
-    {
-        if (query == null) throw new ArgumentNullException(nameof(query));
+        public Dispatcher(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
-        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+        public async Task SendAsync<T>(T command, CancellationToken cancellationToken = default) where T : ICommand
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var handler = scope.ServiceProvider.GetRequiredService<ICommandHandler<T>>();
+            await handler.HandleAsync(command, cancellationToken);
+        }
 
-        object handler = null; // Get handler object using dependency injection or service locator
-
-        if (handler == null) throw new DispatcherException($"No handler registered for {nameof(query)}");
-
-        var handlerMethod = handlerType.GetMethod("Handle");
-
-        if (handlerMethod == null) throw new DispatcherException($"No Handle method found for {nameof(query)}");
-
-        return (TResult)handlerMethod.Invoke(handler, new object[] { query });
+        public async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+            var handler = (dynamic)scope.ServiceProvider.GetRequiredService(handlerType);
+            return await handler.HandleAsync((dynamic)query, cancellationToken);
+        }
     }
 }
