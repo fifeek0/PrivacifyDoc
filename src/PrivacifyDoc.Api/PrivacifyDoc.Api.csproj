@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\PrivacifyDoc.Domain\PrivacifyDoc.Domain.csproj" />
+        <ProjectReference Include="..\PrivacifyDoc.Application\PrivacifyDoc.Application.csproj" />
+        <ProjectReference Include="..\PrivacifyDoc.Infrastructure\PrivacifyDoc.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

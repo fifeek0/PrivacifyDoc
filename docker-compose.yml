@@ -1,0 +1,89 @@
+version: '3.8'
+
+volumes:
+  shared-files:
+  mongodb-data:
+  rabbitmq-data:
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  api:
+    build:
+      context: ./src/PrivacifyDoc.Api
+      dockerfile: Dockerfile
+    container_name: privacifydoc-api
+    ports:
+      - "5000:8080"
+      - "5001:8081"
+    volumes:
+      - shared-files:/app/files
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__MongoDB=mongodb://mongodb:27017
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__Username=guest
+      - RabbitMQ__Password=guest
+      - FileStorage__BasePath=/app/files
+    restart: unless-stopped
+
+  ocr-worker:
+    build:
+      context: ./workers/ocr-worker
+      dockerfile: dockerfile
+    container_name: privacifydoc-ocr
+    volumes:
+      - shared-files:/app/files
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - RabbitMQ__HostName=rabbitmq
+    restart: unless-stopped
+
+  anonymizer-worker:
+    build:
+      context: ./workers/anonymizer-worker
+      dockerfile: Dockerfile
+    container_name: privacifydoc-anonymizer
+    volumes:
+      - shared-files:/app/files
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - RabbitMQ__HostName=rabbitmq
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    restart: unless-stopped
