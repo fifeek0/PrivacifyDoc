@@ -1,0 +1,48 @@
+# Model Configuration
+
+# Label definitions (BIO tagging)
+
+labels:
+  - "O"           # Outside
+  - "B-PERSON"    # Beginning of person name
+  - "I-PERSON"    # Inside person name
+  - "B-ADDRESS"   # Beginning of address
+  - "I-ADDRESS"   # Inside address
+  - "B-EMAIL"     # Email
+  - "B-PHONE"     # Phone number
+  - "B-PESEL"     # PESEL number
+  - "B-NIP"       # NIP number
+  - "B-REGON"     # REGON number
+
+label2id:
+  "O": 0
+  "B-PERSON": 1
+  "I-PERSON": 2
+  "B-ADDRESS": 3
+  "I-ADDRESS": 4
+  "B-EMAIL": 5
+  "B-PHONE": 6
+  "B-PESEL": 7
+  "B-NIP": 8
+  "B-REGON": 9
+
+id2label:
+    0: "O"
+    1: "B-PERSON"
+    2: "I-PERSON"
+    3: "B-ADDRESS"
+    4: "I-ADDRESS"
+    5: "B-EMAIL"
+    6: "B-PHONE"
+    7: "B-PESEL"
+    8: "B-NIP"
+    9: "B-REGON"
+
+entity_types:
+  - PERSON
+  - ADDRESS
+  - EMAIL
+  - PHONE
+  - PESEL
+  - NIP
+  - REGON

@@ -478,3 +478,34 @@ $RECYCLE.BIN/
 *.lnk
 
 Muzaic.Backend.Api/appsettings.Development.json
+/ml/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Data files
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Model files (duże)
+models/*
+!models/.gitkeep
+experiments/*/checkpoints/
+experiments/*/logs/
+
+# MLflow
+mlruns/
+
+# Temporary files
+*.tmp
+*.log
