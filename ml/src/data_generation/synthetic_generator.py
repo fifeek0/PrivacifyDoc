@@ -188,7 +188,7 @@ Kontakt: {EMAIL}, {PHONE}""",
         return ''.join(map(str, digits + [control]))
 
     def _generate_regon(self) -> str:
-        """Generate REGON (9 digits, no checksu, for simplicity)."""
+        """Generate REGON (9 digits, no checksum, for simplicity)."""
         return ''.join([str(random.randint(0, 9)) for _ in range(9)])
 
     def save_dataset(self,
