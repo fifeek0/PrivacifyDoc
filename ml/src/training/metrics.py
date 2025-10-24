@@ -33,13 +33,11 @@ class NERMetrics:
                 Args:
                     eval_pred: Tuple of (predictions, labels)
                         predictions: [batch_size, seq_len, num_labels]
-                        labels: [batch_size, seq_len]
-
-                Returns:
+                        labels: [batch_size, seq_len]                Returns:
                     Dict with metrics: f1, precision, recall
                 """
 
-        predictions, labels = evval_pred
+        predictions, labels = eval_pred
         predictions = np.argmax(predictions, axis=2)
         true_labels = []
         pred_labels = []

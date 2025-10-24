@@ -36,6 +36,7 @@ class NERDataset(Dataset):
         self.tokenizer = tokenizer
         self.label2id = label2id
         self.max_length = max_length
+        self.examples = self._load_data(data_path)
 
     def _load_data(self, data_path: str) -> List[Dict]:
         """Load examples from JSONL."""
@@ -103,30 +104,28 @@ class NERDataset(Dataset):
 
         labels = [self.label2id['O']] * len(offset_mapping)
 
-        entity_map = {}
+        # Build entity spans for fast lookup
+        entity_spans = []  # (start, end, label)
         for start, end, entity_type in entities:
-            for pos in range(start, end):
-                if pos == start:
-                        entity_map[pos] = f'B-{entity_type}'
-                else:
-                    if entity_type in ['PERSON', 'ADDRESS']:
-                        entity_map[pos] = f'I-{entity_type}'
-                    else:
-                        entity_map[pos] = f'B-{entity_type}'
+            entity_spans.append((start, end, entity_type))
 
         for token_idx, (start, end) in enumerate(offset_mapping):
             if start == 0 and end == 0:
                 labels[token_idx] = -100
                 continue
 
-            token_label = None
-            for pos in range(start, end):
-                if pos in entity_map:
-                    token_label = entity_map[pos]
+            assigned = False
+            for ent_start, ent_end, ent_type in entity_spans:
+                # Token and entity overlap if they share any character
+                if start < ent_end and end > ent_start:
+                    if start == ent_start:
+                        labels[token_idx] = self.label2id[f'B-{ent_type}']
+                    else:
+                        labels[token_idx] = self.label2id[f'I-{ent_type}']
+                    assigned = True
                     break
-
-            if token_label and token_label in self.label2id:
-                labels[token_idx] = self.label2id[token_label]
+            if not assigned:
+                labels[token_idx] = self.label2id['O']
 
         return labels
 

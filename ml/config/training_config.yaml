@@ -7,40 +7,39 @@ experiment:
 
 model:
   name: "allegro/herbert-base-cased"
-  num_labels: 10  # Adjust based on the number of NER labels
+  num_labels: 15  # Adjust based on the number of NER labels
   # Labels: O, B-PERSON, I-PERSON, B-ADDRESS, I-ADDRESS,
   #         B-EMAIL, B-PHONE, B-PESEL, B-NIP, B-REGON
 
-  data:
-    train_path: "data/processed/train.jsonl"
-    val_path: "data/processed/val.jsonl"
-    test_path: "data/processed/test.jsonl"
-    max_seq_length: 128 # Maximum sequence length for tokenization
+data:
+  train_path: "data/processed/train.jsonl"
+  val_path: "data/processed/val.jsonl"
+  test_path: "data/processed/test.jsonl"
+  max_length: 128  # Maximum sequence length for tokenization
 
-    training:
-      output_dir: "experiments"
-      num_train_epochs: 5
-      per_device_train_batch_size: 16
-      per_device_eval_batch_size: 16
-      learning_rate: 2.0e-5
-      weight_decay: 0.01
-      warmup_steps: 500
+training:
+  output_dir: "experiments"
+  num_train_epochs: 5
+  per_device_train_batch_size: 16
+  per_device_eval_batch_size: 16
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_steps: 500
+  fp16: true  # Enable mixed precision training
+  gradient_accumulation_steps: 2  # To simulate larger batch size
+  
+  # Evaluation strategy
+  evaluation_strategy: "epoch"
+  save_strategy: "epoch"
+  load_best_model_at_end: true
+  metric_for_best_model: "f1"
+  
+  logging_dir: "logs"
+  logging_steps: 50
+  
+  early_stopping_patience: 3  # Early stopping after 3 epochs without improvement
 
-      fp16: true  # Enable mixed precision training
-
-      gradient_accumulation_steps: 2 # To simulate larger batch size
-
-      # Evaluation strategy
-      evaluation_strategy: "epoch"
-      save_strategy: "epoch"
-      load_best_model_at_end: true
-      metric_for_best_model: "f1"
-
-      logging_dir: "logs"
-      logging_steps: 50
-
-      early_stopping_patience: 3  # Early stopping after 3 epochs without improvement
-  optimization:
+optimization:
   optimizer: "AdamW"
   learning_rate_scheduler: "linear"
 

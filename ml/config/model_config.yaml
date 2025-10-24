@@ -9,10 +9,15 @@ labels:
   - "B-ADDRESS"   # Beginning of address
   - "I-ADDRESS"   # Inside address
   - "B-EMAIL"     # Email
+  - "I-EMAIL"     # Inside email
   - "B-PHONE"     # Phone number
+  - "I-PHONE"     # Inside phone
   - "B-PESEL"     # PESEL number
+  - "I-PESEL"     # Inside PESEL
   - "B-NIP"       # NIP number
+  - "I-NIP"       # Inside NIP
   - "B-REGON"     # REGON number
+  - "I-REGON"     # Inside REGON
 
 label2id:
   "O": 0
@@ -21,10 +26,15 @@ label2id:
   "B-ADDRESS": 3
   "I-ADDRESS": 4
   "B-EMAIL": 5
-  "B-PHONE": 6
-  "B-PESEL": 7
-  "B-NIP": 8
-  "B-REGON": 9
+  "I-EMAIL": 6
+  "B-PHONE": 7
+  "I-PHONE": 8
+  "B-PESEL": 9
+  "I-PESEL": 10
+  "B-NIP": 11
+  "I-NIP": 12
+  "B-REGON": 13
+  "I-REGON": 14
 
 id2label:
     0: "O"
@@ -33,10 +43,15 @@ id2label:
     3: "B-ADDRESS"
     4: "I-ADDRESS"
     5: "B-EMAIL"
-    6: "B-PHONE"
-    7: "B-PESEL"
-    8: "B-NIP"
-    9: "B-REGON"
+    6: "I-EMAIL"
+    7: "B-PHONE"
+    8: "I-PHONE"
+    9: "B-PESEL"
+    10: "I-PESEL"
+    11: "B-NIP"
+    12: "I-NIP"
+    13: "B-REGON"
+    14: "I-REGON"
 
 entity_types:
   - PERSON
